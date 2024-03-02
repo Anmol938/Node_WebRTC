@@ -12,6 +12,7 @@ var roomName  = roomInput.value;
 var creator = false;
 
 var rtcPeerConnection;
+var userStream ;
 
 var iceServers = {
     iceServers : [
@@ -38,6 +39,7 @@ socket.on("created", function(){
             video:{width:720, height:480}
         },
         function(stream){
+            userStream = stream;
             videoChatForm.style="display :none";
             userVideo.srcObject = stream;
             userVideo.onloadedmetadata = function(e){
@@ -58,10 +60,11 @@ socket.on("joined", function(){
             video:{width:720, height:480}
         },
         function(stream){
+            userStream = stream;
             videoChatForm.style="display :none";
             userVideo.srcObject = stream;
             userVideo.onloadedmetadata = function(e){
-                userVideo.play();
+            userVideo.play();
             }
             socket.emit("ready",roomName);
         },
@@ -84,6 +87,9 @@ socket.on("ready", function(){
         if(creator){
            rtcPeerConnection =  new RTCPeerConnection(iceServers);
            rtcPeerConnection.onicecandidate = OnIceCandidateFunction;
+           rtcPeerConnection.ontrack = OnTrackFunction;
+           rtcPeerConnection.addTrack(userStream.getTracks()[0],userStream);//for audio
+           rtcPeerConnection.addTrack(userStream.getTracks()[1],userStream); //for video ['audio','video']
         }
 
 });
@@ -95,5 +101,12 @@ socket.on("answer", function(){});
 function OnIceCandidateFunction(event){
     if(event.candidate){
         socket.emit("candidate",event.candidate, roomName);
+    }
+}
+
+function OnTrackFunction(event){
+    peerVideo.srcObject = event.streams[0];
+    peerVideo.onloadedmetadata = function(e){
+        peerVideo.play();
     }
 }
