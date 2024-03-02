@@ -16,7 +16,7 @@ var userStream ;
 
 var iceServers = {
     iceServers : [
-        {urls: "stun2.l.google.com:19302"},
+        {urls: "stun:stun2.l.google.com:19302"},
         {urls: "stun:stun.services.mozilla.com"}
     ]
 };
@@ -90,12 +90,48 @@ socket.on("ready", function(){
            rtcPeerConnection.ontrack = OnTrackFunction;
            rtcPeerConnection.addTrack(userStream.getTracks()[0],userStream);//for audio
            rtcPeerConnection.addTrack(userStream.getTracks()[1],userStream); //for video ['audio','video']
+           rtcPeerConnection.createOffer(
+            function(offer){
+                rtcPeerConnection.setLocalDescription(offer);
+                socket.emit("offer", offer, roomName);
+            },
+            function(error){
+                console.log(error);
+            }
+           ); 
         }
 
 });
-socket.on("candidate", function(){});
-socket.on("offer", function(){});
-socket.on("answer", function(){});
+
+socket.on("candidate", function(candidate){
+    var iceCandidate = new RTCIceCandidate(candidate)
+    rtcPeerConnection.addIceCandidate(iceCandidate);
+});
+
+
+socket.on("offer", function(offer){
+    if(!creator){
+        rtcPeerConnection =  new RTCPeerConnection(iceServers);
+        rtcPeerConnection.onicecandidate = OnIceCandidateFunction;
+        rtcPeerConnection.ontrack = OnTrackFunction;
+        rtcPeerConnection.addTrack(userStream.getTracks()[0],userStream);//for audio
+        rtcPeerConnection.addTrack(userStream.getTracks()[1],userStream); //for video ['audio','video']
+        rtcPeerConnection.setRemoteDescription(offer);
+        rtcPeerConnection.createAnswer(
+         function(answer){
+            rtcPeerConnection.setLocalDescription(answer);
+             socket.emit("answer", answer, roomName);
+         },
+         function(error){
+             console.log(error);
+         }
+        ); 
+     }
+});
+
+socket.on("answer", function(answer){
+    rtcPeerConnection.setRemoteDescription(answer);
+});
 
 
 function OnIceCandidateFunction(event){
