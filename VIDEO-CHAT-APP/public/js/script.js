@@ -11,8 +11,9 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia 
 
 //upgrading work
 var divBtnGroup = document.getElementById('btn-group');
+var muteButton = document.getElementById('muteButton');
 
-
+var muteFlag = false;
 
 var roomName  = roomInput.value;
 var creator = false;
@@ -36,6 +37,20 @@ joinBtn.addEventListener("click", function(){
             }
 
 });
+
+muteButton.addEventListener("click", function(){
+    muteFlag = !muteFlag;
+    if(muteFlag){
+        userStream.getTracks()[0].enabled = false;
+        muteButton.textContent="Unmute";
+    }
+    else{
+        userStream.getTracks()[0].enabled = true;
+        muteButton.textContent="mute";
+    }    
+
+});
+
 
 socket.on("created", function(){
     creator = true;
@@ -98,6 +113,8 @@ socket.on("ready", function(){
            rtcPeerConnection =  new RTCPeerConnection(iceServers);
            rtcPeerConnection.onicecandidate = OnIceCandidateFunction;
            rtcPeerConnection.ontrack = OnTrackFunction;
+           console.log(userStream.getTracks());
+           //console.log("sadasdddddddddddddddddddddddddddddddddddddddddddddddddd");
            rtcPeerConnection.addTrack(userStream.getTracks()[0],userStream);//for audio
            rtcPeerConnection.addTrack(userStream.getTracks()[1],userStream); //for video ['audio','video']
            rtcPeerConnection.createOffer(
