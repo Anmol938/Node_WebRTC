@@ -16,6 +16,7 @@ app.set('views','./views');
 app.use(express.static('public'));
 
 const userRoute = require('./routes/UserRoute');
+const { closeDelimiter } = require('ejs');
 app.use('/',userRoute);
 
 //socket io working with signalling server
@@ -69,5 +70,11 @@ io.on("connection", function(socket){
         socket.broadcast.to(roomName).emit("answer", answer);
     });
 
+    //    leave room 
+    
+    socket.on("leave", function(roomName){
+            socket.leave(roomName);
+            socket.broadcast.to(roomName).emit("leave")
+    });
 
 });

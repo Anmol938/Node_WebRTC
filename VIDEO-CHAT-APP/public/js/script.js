@@ -12,8 +12,12 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia 
 //upgrading work
 var divBtnGroup = document.getElementById('btn-group');
 var muteButton = document.getElementById('muteButton');
+var hideCameraBtn = document.getElementById('hideCamera');
+var leaveRoomButton = document.getElementById('leaveRoomButton');
+
 
 var muteFlag = false;
+var hideCameraFlag = false;
 
 var roomName  = roomInput.value;
 var creator = false;
@@ -51,6 +55,63 @@ muteButton.addEventListener("click", function(){
 
 });
 
+hideCameraBtn.addEventListener("click", function(){
+    hideCameraFlag = !hideCameraFlag;
+    if(hideCameraFlag){
+        userStream.getTracks()[1].enabled = false;
+        hideCameraBtn.textContent="Show Camera";
+    }
+    else{
+        userStream.getTracks()[1].enabled = true;
+        hideCameraBtn.textContent="Hide Camera";
+    }    
+
+});
+
+// leave room concept
+leaveRoomButton.addEventListener("click", function(){
+    socket.emit("leave",roomName);
+
+    videoChatForm.style="display :block";
+    divBtnGroup.style = "display:none";
+    document.getElementById('video-chat-rooms').style.display = 'none';
+
+    if(userVideo.srcObject){
+        userVideo.srcObject.getTracks()[0].stop();
+    userVideo.srcObject.getTracks()[1].stop();
+    }
+    
+    if(peerVideo.srcObject){
+        
+    peerVideo.srcObject.getTracks()[0].stop();
+    peerVideo.srcObject.getTracks()[1].stop();
+    }
+
+    if(rtcPeerConnection){
+        rtcPeerConnection.ontrack = null;
+        rtcPeerConnection.onicecandidate = null;
+        rtcPeerConnection.close();
+
+    }
+
+});
+
+socket.on("leave",function(){
+    creator = true;
+    
+    if(peerVideo.srcObject){
+        
+        peerVideo.srcObject.getTracks()[0].stop();
+        peerVideo.srcObject.getTracks()[1].stop();
+        }
+    
+        if(rtcPeerConnection){
+            rtcPeerConnection.ontrack = null;
+            rtcPeerConnection.onicecandidate = null;
+            rtcPeerConnection.close();
+    
+        }
+});
 
 socket.on("created", function(){
     creator = true;
