@@ -8,6 +8,12 @@ var userVideo = document.getElementById('user-video');
 var peerVideo = document.getElementById('peer-video');
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
+
+//upgrading work
+var divBtnGroup = document.getElementById('btn-group');
+
+
+
 var roomName  = roomInput.value;
 var creator = false;
 
@@ -36,11 +42,13 @@ socket.on("created", function(){
     navigator.getUserMedia(
         {
             audio:true,
-            video:{width:720, height:480}
+            video:{width:300, height:300}
         },
         function(stream){
             userStream = stream;
             videoChatForm.style="display :none";
+            divBtnGroup.style = "display:flex";
+            document.getElementById('video-chat-rooms').style.display = 'flex';
             userVideo.srcObject = stream;
             userVideo.onloadedmetadata = function(e){
                 userVideo.play();
@@ -57,11 +65,13 @@ socket.on("joined", function(){
     navigator.getUserMedia(
         {
             audio:true,
-            video:{width:720, height:480}
+            video:{width:300, height:300}
         },
         function(stream){
             userStream = stream;
-            videoChatForm.style="display :none";
+            videoChatForm.style="display:none";
+            divBtnGroup.style = "display:flex";
+            document.getElementById('video-chat-rooms').style.display = 'flex';
             userVideo.srcObject = stream;
             userVideo.onloadedmetadata = function(e){
             userVideo.play();

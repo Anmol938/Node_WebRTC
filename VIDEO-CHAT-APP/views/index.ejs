@@ -13,11 +13,15 @@
             <input id="roomName" type="text" name="roomName" placeholder="Room Name" />
             <button id="join">Join</button>
         </div>
-        <div id="video-chat-rooms">
+        <div id="video-chat-rooms" style="display:none;">
             <video id="user-video"></video>
             <video id="peer-video"></video>
         </div>
-
+        <div class="button-container" id="btn-group" style="display: none;">
+            <button id="muteButton">Mute Mic</button>
+            <button id="hide-video">Hide Video</button>
+            <button id="leave-room">Leave Room</button>
+        </div>
     </body>
     <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
     <script src="js/script.js"></script>

@@ -56,10 +56,51 @@ body {
     font-size: 16px;
   }
   
-  button {
+  #button {
     background: #302e2e23;
     color: #fff;
     font-size: 18px;
     padding: 12px 0;
     width: 100%;
   }
+
+  #video-chat-rooms{
+    display: flex;
+    justify-content: center;
+  }
+  #user-video, #peer-video {
+    border: 1px solid #ccc; /* Add a border */
+    margin: 0 10px; /* Add margin to create a gap */
+}
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 8px 16px; /* Adjust padding for smaller size */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px; /* Adjust font size for smaller size */
+  margin: 4px 8px; /* Adjust margin for spacing */
+  cursor: pointer;
+  border-radius: 4px; /* Adjust border radius for smaller curvature */
+  transition: background-color 0.3s ease;
+  min-width: 200px;
+}
+
+button:hover {
+  background-color: #56ed5e;
+}
+

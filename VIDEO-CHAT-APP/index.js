@@ -52,14 +52,14 @@ io.on("connection", function(socket){
     });
 
     socket.on("candidate", function(candidate, roomName){
-        console.log("Candidate");
-        console.log(candidate);
+       // console.log("Candidate");
+        //console.log(candidate);
         socket.broadcast.to(roomName).emit("candidate", candidate);
     });
 
     socket.on("offer", function(offer, roomName){
-        console.log("offer");
-        console.log(offer);
+        //console.log("offer");
+        //console.log(offer);
 
         socket.broadcast.to(roomName).emit("offer", offer);
     });
