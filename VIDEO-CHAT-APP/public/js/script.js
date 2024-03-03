@@ -19,7 +19,7 @@ var leaveRoomButton = document.getElementById('leaveRoomButton');
 var muteFlag = false;
 var hideCameraFlag = false;
 
-var roomName  = roomInput.value;
+var roomName;
 var creator = false;
 
 var rtcPeerConnection;
@@ -37,6 +37,7 @@ joinBtn.addEventListener("click", function(){
             alert("Please enter a room name");
         }
         else{
+                roomName = roomInput.value;
                 socket.emit("join", roomName);
             }
 
@@ -98,7 +99,7 @@ leaveRoomButton.addEventListener("click", function(){
 
 socket.on("leave",function(){
     creator = true;
-    
+
     if(peerVideo.srcObject){
         
         peerVideo.srcObject.getTracks()[0].stop();
